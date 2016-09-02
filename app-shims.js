@@ -294,6 +294,24 @@
       return values;
     });
   }
+  
+  function generateLazyModule(namespace, name, globalName) {
+    define(name, [], function() {
+      'use strict';
+
+      var exportObject = {};
+
+      if (typeof globalName === 'object') {
+        for (var i = 0, l = globalName.length; i < l; i++) {
+          exportObject[globalName[i]] = window[namespace][globalName[i]];
+        }
+      } else {
+        exportObject['default'] = (globalName !== '') ? window[namespace][globalName] : window[namespace];
+      }
+
+      return exportObject;
+    });
+  }
 
   processEmberShims();
   processTestShims();
